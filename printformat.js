@@ -48,22 +48,30 @@
 				return false;
 			}
 			
-			this.interpolate(stringToChange, identifiersAndValues)
+			return {
+				stringToChange,
+				identifiersAndValues
+			}
 		},
 		interpolate(baseString, identifiersAndValues) {
-			console.log(baseString.length, identifiersAndValues.identifiers.length)
+			console.log(identifiersAndValues)
 			for (let i = 0; i < identifiersAndValues.identifiers.length; i++) {
 				for (let j = 0; j < baseString.length; j++) {
 					if (baseString[j] == identifiersAndValues.identifiers[i]) {
 						baseString[j] = identifiersAndValues.values[i];
+						break;
 					}
 				}
 			}
-
-			console.log(baseString, identifiersAndValues)
+			return baseString;
 		},
 		print(value) {
 			let correct = this.check(arguments);
+			let changedString;
+			if (correct) {
+				changedString = this.interpolate(correct.stringToChange, correct.identifiersAndValues);
+			}
+			console.log(changedString.join(" "))
 		}
 	}
 	window.pft = pft; // todo: there has to be a better way than this 
