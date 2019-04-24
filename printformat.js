@@ -65,8 +65,15 @@
 								break;
 							case formatBaseTwo:
 								let baseTwo = this.toBaseTwo(identifiersAndValues.values[i]);
-								console.log(baseTwo)
 								baseString[j] = baseTwo;
+								break;
+							case formatBaseEight:
+								let baseEight = this.toBaseEight(identifiersAndValues.values[i]);
+								baseString[j] = baseEight;
+								break;
+							case formatBoolean:
+								let booleanValue = this.toBoolean(identifiersAndValues.values[i])
+								baseString[j] = booleanValue;
 								break;
 						}
 						//baseString[j] = identifiersAndValues.values[i];
@@ -87,13 +94,30 @@
 		print(value) {
 			console.log(this.getValue(...arguments))
 		},
-		// rules for checking
+		//***** conversion *****//
+		toBoolean(value) {
+			if (typeof value !== "boolean") {
+				console.error("Error: value is not a boolean type");
+				return false;
+			}
+			if (value === true) {
+				return true;
+			}
+			return false;
+		},
 		toBaseTwo(value) {
 			if (typeof value !== "number") {
 				console.error("Error: value to change to baseTWO is not number")
 				return false;
 			}
 			return value.toString(2);
+		},
+		toBaseEight(value) {
+			if (typeof value !== "number") {
+				console.error("Error: value to change to baseTWO is not number")
+				return false;
+			}
+			return value.toString(8);
 		}
 	}
 	window.pft = pft; // todo: there has to be a better way than this 
