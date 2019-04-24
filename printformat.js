@@ -2,14 +2,15 @@
 	"use strict"
 
 	const	formatDefault = "%v",
-			formatTypeOfValue = "%#v",
 			formatBaseTwo = "%b",
 			formatBaseEight = "%o",
 			formatBaseTen = "%d",
+			formatBaseSixteen = "%x",
 			formatUnicodeCodePoint = "%c",
+			formatTypeOfValue = "%T",
 			formatBoolean = "%t";
 
-	const allFormats = ["%v", "%#v", "%b", "%o", "%d", "%c", "%t"];
+	const allFormats = ["%v", "%b", "%o", "%d", "%x", "%c", "%T", "%t"];
 
 	let pft = {
 		// check run to audit the validity of parameters
@@ -71,9 +72,17 @@
 								let baseEight = this.toBaseEight(identifiersAndValues.values[i]);
 								baseString[j] = baseEight;
 								break;
+							case formatBaseSixteen:
+								let baseSixteen = this.toBaseSixteen(identifiersAndValues.values[i])
+								baseString[j] = baseSixteen;
+								break;
 							case formatBoolean:
 								let booleanValue = this.toBoolean(identifiersAndValues.values[i])
 								baseString[j] = booleanValue;
+								break;
+							case formatTypeOfValue:
+								let typeofValue = this.toTypeof(identifiersAndValues.values[i])
+								baseString[j] = typeofValue;
 								break;
 						}
 						//baseString[j] = identifiersAndValues.values[i];
@@ -89,7 +98,12 @@
 			if (correct) {
 				changedString = this.interpolate(correct.stringToChange, correct.identifiersAndValues);
 			}
-			return changedString.join(" ");
+			// todo: get a better way to solve this issue
+			// issue: if changedString is undefined the whole program crashes with
+			// a TypeError
+			if (changedString !== undefined) {
+				return changedString.join(" ");
+			}
 		},
 		print(value) {
 			console.log(this.getValue(...arguments))
@@ -98,26 +112,51 @@
 		toBoolean(value) {
 			if (typeof value !== "boolean") {
 				console.error("Error: value is not a boolean type");
-				return false;
 			}
 			if (value === true) {
 				return true;
 			}
 			return false;
 		},
+		toTypeof(value) {
+			switch (value.constructor) {
+				case String:
+					return "string";
+					break;
+				case Number:
+					return "number";
+					break;
+				case Array:
+					return "array";
+					break;
+				case Object:
+					return "object";
+					break;
+				default:
+					console.error("Error: couldn't find value type")
+					break;
+			}
+		},
 		toBaseTwo(value) {
 			if (typeof value !== "number") {
-				console.error("Error: value to change to baseTWO is not number")
+				console.error("Error: value to change to base two is not number")
 				return false;
 			}
 			return value.toString(2);
 		},
 		toBaseEight(value) {
 			if (typeof value !== "number") {
-				console.error("Error: value to change to baseTWO is not number")
+				console.error("Error: value to change to base Eight is not number")
 				return false;
 			}
 			return value.toString(8);
+		},
+		toBaseSixteen(value) {
+			if (typeof value !== "number") {
+				console.error("Error: value to change to base Sixteen is not number")
+				return false;
+			}
+			return value.toString(16)
 		}
 	}
 	window.pft = pft; // todo: there has to be a better way than this 
