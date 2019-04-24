@@ -6,9 +6,10 @@
 			formatBaseTwo = "%b",
 			formatBaseEight = "%o",
 			formatBaseTen = "%d",
-			formatUnicodeCodePoint = "%c";
+			formatUnicodeCodePoint = "%c",
+			formatBoolean = "%t";
 
-	const allFormats = ["%v", "%#v", "%b", "%o", "%d", "%c"];
+	const allFormats = ["%v", "%#v", "%b", "%o", "%d", "%c", "%t"];
 
 	let pft = {
 		// check run to audit the validity of parameters
@@ -54,35 +55,51 @@
 			}
 		},
 		interpolate(baseString, identifiersAndValues) {
-			console.log(identifiersAndValues)
 			for (let i = 0; i < identifiersAndValues.identifiers.length; i++) {
 				for (let j = 0; j < baseString.length; j++) {
 					if (baseString[j] == identifiersAndValues.identifiers[i]) {
-						baseString[j] = identifiersAndValues.values[i];
-						break;
+
+						switch (baseString[j]) {
+							case formatDefault:
+								baseString[j] = identifiersAndValues.values[i];
+								break;
+							case formatBaseTwo:
+								let baseTwo = this.toBaseTwo(identifiersAndValues.values[i]);
+								console.log(baseTwo)
+								baseString[j] = baseTwo;
+								break;
+						}
+						//baseString[j] = identifiersAndValues.values[i];
+						//break;
 					}
 				}
 			}
 			return baseString;
 		},
-		print(value) {
+		getValue(value) {
 			let correct = this.check(arguments);
 			let changedString;
 			if (correct) {
 				changedString = this.interpolate(correct.stringToChange, correct.identifiersAndValues);
 			}
-			console.log(changedString.join(" "))
+			return changedString.join(" ");
+		},
+		print(value) {
+			console.log(this.getValue(...arguments))
+		},
+		// rules for checking
+		toBaseTwo(value) {
+			if (typeof value !== "number") {
+				console.error("Error: value to change to baseTWO is not number")
+				return false;
+			}
+			return value.toString(2);
 		}
 	}
 	window.pft = pft; // todo: there has to be a better way than this 
 })()
 
-
-// pft.print("hello world there you are %v", "john");
-// pft.print("hello world there %v you are %v", "ben", "john");
-// pft.print("hello world there you are %b", 89);
-// pft.print("hello world there you are %v", "john");
-
+// %t: boolean true or false
 // %v: value in default format
 // %b: base 2
 // %c: character represented by unicode code point
