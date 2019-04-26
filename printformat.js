@@ -149,6 +149,9 @@
 				case Object:
 					return "object";
 					break;
+				case Function:
+					return "function";
+					break;
 				default:
 					console.error("Error: couldn't find value type")
 					break;
