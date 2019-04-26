@@ -2,15 +2,19 @@
 	"use strict"
 
 	const	formatDefault = "%v",
+			// Base formatting
 			formatBaseTwo = "%b",
 			formatBaseEight = "%o",
 			formatBaseTen = "%d",
 			formatBaseSixteen = "%x",
-			formatUnicodeCodePoint = "%c",
+			formatUnicodeCodePoint = "%c", // todo: not done yet
 			formatTypeOfValue = "%T",
-			formatBoolean = "%t";
+			formatBoolean = "%t",
+			// floating point numbers
+			formatScientficNotationSmall = "%e",
+			formatScientficNotationLarge = "%E";
 
-	const allFormats = ["%v", "%b", "%o", "%d", "%x", "%c", "%T", "%t"];
+	const allFormats = ["%v", "%b", "%o", "%d", "%x", "%c", "%T", "%t", "%e", "%E"];
 
 	let pft = {
 		// check run to audit the validity of parameters
@@ -72,6 +76,10 @@
 								let baseEight = this.toBaseEight(identifiersAndValues.values[i]);
 								baseString[j] = baseEight;
 								break;
+							case formatBaseTen:
+								let baseTen = this.toBaseTen(identifiersAndValues.values[i]);
+								baseString[j] = baseEight;
+								break;
 							case formatBaseSixteen:
 								let baseSixteen = this.toBaseSixteen(identifiersAndValues.values[i])
 								baseString[j] = baseSixteen;
@@ -83,6 +91,15 @@
 							case formatTypeOfValue:
 								let typeofValue = this.toTypeof(identifiersAndValues.values[i])
 								baseString[j] = typeofValue;
+								break;
+							// format floating point numbers
+							case formatScientficNotationSmall:
+								let sciNotationSmall = this.toSciNotationSmall(identifiersAndValues.values[i])
+								baseString[j] = sciNotationSmall;
+								break;
+							case formatScientficNotationLarge:
+								let sciNotationLarge = this.toSciNotationLarge(identifiersAndValues.values[i])
+								baseString[j] = sciNotationLarge;
 								break;
 						}
 						//baseString[j] = identifiersAndValues.values[i];
@@ -151,12 +168,33 @@
 			}
 			return value.toString(8);
 		},
+		formatBaseTen() {
+			if (typeof value !== "number") {
+				console.error("Error: value to change to base Sixteen is not number")
+				return false;
+			}
+			return value.toString(10)
+		},
 		toBaseSixteen(value) {
 			if (typeof value !== "number") {
 				console.error("Error: value to change to base Sixteen is not number")
 				return false;
 			}
 			return value.toString(16)
+		},
+		toSciNotationSmall(value) {
+			if (typeof value !== "number") {
+				console.error("Error: value to change to base Sixteen is not number")
+				return false;
+			}
+			return value.toExponential()
+		},
+		toSciNotationLarge(value) {
+			if (typeof value !== "number") {
+				console.error("Error: value to change to base Sixteen is not number")
+				return false;
+			}
+			return value.toExponential().toString().toUpperCase();
 		}
 	}
 	window.pft = pft; // todo: there has to be a better way than this 
