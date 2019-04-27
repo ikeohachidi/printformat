@@ -59,6 +59,10 @@
 				identifiersAndValues
 			}
 		},
+		removeUsed(argument, position) {
+			argument.values.splice(position, 1)
+			argument.identifiers.splice(position, 1)
+		},
 		interpolate(baseString, identifiersAndValues) {
 			for (let i = 0; i < identifiersAndValues.identifiers.length; i++) {
 				for (let j = 0; j < baseString.length; j++) {
@@ -67,39 +71,48 @@
 						switch (baseString[j]) {
 							case formatDefault:
 								baseString[j] = identifiersAndValues.values[i];
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							case formatBaseTwo:
 								let baseTwo = this.toBaseTwo(identifiersAndValues.values[i]);
 								baseString[j] = baseTwo;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							case formatBaseEight:
 								let baseEight = this.toBaseEight(identifiersAndValues.values[i]);
 								baseString[j] = baseEight;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							case formatBaseTen:
 								let baseTen = this.toBaseTen(identifiersAndValues.values[i]);
 								baseString[j] = baseEight;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							case formatBaseSixteen:
 								let baseSixteen = this.toBaseSixteen(identifiersAndValues.values[i])
 								baseString[j] = baseSixteen;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							case formatBoolean:
 								let booleanValue = this.toBoolean(identifiersAndValues.values[i])
 								baseString[j] = booleanValue;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							case formatTypeOfValue:
 								let typeofValue = this.toTypeof(identifiersAndValues.values[i])
 								baseString[j] = typeofValue;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							// format floating point numbers
 							case formatScientficNotationSmall:
 								let sciNotationSmall = this.toSciNotationSmall(identifiersAndValues.values[i])
 								baseString[j] = sciNotationSmall;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 							case formatScientficNotationLarge:
 								let sciNotationLarge = this.toSciNotationLarge(identifiersAndValues.values[i])
 								baseString[j] = sciNotationLarge;
+								this.removeUsed(identifiersAndValues, i)	
 								break;
 						}
 						//baseString[j] = identifiersAndValues.values[i];
@@ -109,7 +122,7 @@
 			}
 			return baseString;
 		},
-		getValue(value) {
+		format(value) {
 			let correct = this.check(arguments);
 			let changedString;
 			if (correct) {
@@ -123,7 +136,7 @@
 			}
 		},
 		print(value) {
-			console.log(this.getValue(...arguments))
+			console.log(this.format(...arguments))
 		},
 		//***** conversion *****//
 		toBoolean(value) {
